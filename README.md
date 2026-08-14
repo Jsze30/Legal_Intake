@@ -16,12 +16,56 @@ It imports one or more calls from JSONL, lets a user choose a transcript, extrac
 ```text
 frontend/          React 19, TypeScript, Vite, and Playwright
 backend/           Fastify API, extraction worker, and PostgreSQL migrations
-mockups/           Static design prototypes
-finch_references/  Finch visual references
 ```
 
 The frontend never receives the database URL or OpenAI API key.
 The backend persists the untouched transcript before calling the model, so a failed extraction does not lose the intake.
+
+## Technical architecture
+
+```text
+JSONL file
+    |
+    v
+React frontend ---> Fastify API ---> PostgreSQL
+                         ^                |
+                         |                v
+                    status polling     job queue
+                                          |
+                                          v
+                                  extraction worker ---> OpenAI
+                                          |
+                                          v
+                              normalized PostgreSQL records
+```
+
+The application runs as four separate parts:
+
+- **React frontend:** Parses JSONL locally, displays the available calls, submits only the selected transcript, polls its status, and renders the completed review with transcript evidence.
+- **Fastify API:** Validates requests, creates intake records, exposes processing status and results, and keeps database and model credentials on the server.
+- **Extraction worker:** Claims queued jobs, requests structured output from OpenAI, validates the response with Zod, and writes normalized facts back to PostgreSQL.
+- **PostgreSQL:** Stores the original transcript, job state, failure information, and relational records for clients, incidents, defendants, insurance, treatments, services, reports, and witnesses.
+
+Submitting an intake and creating its job happen in one database transaction.
+The API returns `202 Accepted` immediately, so model processing does not hold the browser request open.
+The frontend then polls the status endpoint until the intake is complete or has failed.
+
+Workers claim jobs with PostgreSQL row locking and `SKIP LOCKED`, allowing multiple workers to process different calls safely.
+Timed-out jobs can be reclaimed, and failed jobs retry with a configured attempt limit.
+The completed extraction is written in a transaction so the frontend never reads a partially normalized result.
+
+### API contract
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/health` | Check that the API process is running |
+| `GET` | `/ready` | Check that PostgreSQL is reachable |
+| `POST` | `/api/intakes` | Save a transcript and queue analysis |
+| `GET` | `/api/intakes/:id/status` | Read processing progress or failure state |
+| `GET` | `/api/intakes/:id/transcript` | Read the original source transcript |
+| `GET` | `/api/intakes/:id/results` | Read the normalized review data |
+
+An optional non-null `externalReference` makes intake submission idempotent, preventing the same call from being stored twice.
 
 ## Quick start
 
