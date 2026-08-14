@@ -5,6 +5,7 @@ import type { IntakeReview, TranscriptCase } from '../types';
 interface ProcessingScreenProps {
   transcript: TranscriptCase;
   onComplete: (review: IntakeReview) => void;
+  onCancel: () => void;
 }
 
 const steps = [
@@ -13,26 +14,37 @@ const steps = [
   'Linking findings to source evidence',
 ];
 
-export function ProcessingScreen({ transcript, onComplete }: ProcessingScreenProps) {
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return 'The transcript could not be analyzed.';
+}
+
+export function ProcessingScreen({ transcript, onComplete, onCancel }: ProcessingScreenProps) {
   const [activeStep, setActiveStep] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const interval = reducedMotion ? 40 : 560;
-    const timers = steps.slice(1).map((_, index) => window.setTimeout(() => setActiveStep(index + 1), interval * (index + 1)));
-    const completeTimer = window.setTimeout(() => {
-      void analyzeTranscript(transcript).then((review) => {
-        if (!cancelled) onComplete(review);
+
+    const timers = steps.slice(1).map((_, index) => window.setTimeout(
+      () => setActiveStep(index + 1),
+      interval * (index + 1),
+    ));
+
+    void analyzeTranscript(transcript, { signal: controller.signal })
+      .then(onComplete)
+      .catch((analysisError: unknown) => {
+        if (!controller.signal.aborted) setError(errorMessage(analysisError));
       });
-    }, interval * steps.length);
 
     return () => {
-      cancelled = true;
+      controller.abort();
       timers.forEach(window.clearTimeout);
-      window.clearTimeout(completeTimer);
     };
-  }, [onComplete, transcript]);
+  }, [attempt, onComplete, transcript]);
 
   return (
     <main className="app-main">
@@ -46,6 +58,26 @@ export function ProcessingScreen({ transcript, onComplete }: ProcessingScreenPro
             </div>
           ))}
         </div>
+        {error && (
+          <div className="processing-error" role="alert">
+            <strong>Analysis could not finish.</strong>
+            <p>{error}</p>
+            <div className="processing-actions">
+              <button
+                className="button"
+                type="button"
+                onClick={() => {
+                  setActiveStep(0);
+                  setError(null);
+                  setAttempt((value) => value + 1);
+                }}
+              >
+                Try again
+              </button>
+              <button className="text-button" type="button" onClick={onCancel}>Back to intakes</button>
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );

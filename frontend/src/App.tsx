@@ -66,7 +66,11 @@ export function App() {
         />
       )}
       {screen === 'processing' && selectedTranscript && (
-        <ProcessingScreen transcript={selectedTranscript} onComplete={handleAnalysisComplete} />
+        <ProcessingScreen
+          transcript={selectedTranscript}
+          onComplete={handleAnalysisComplete}
+          onCancel={() => setScreen('selection')}
+        />
       )}
       {screen === 'review' && selectedTranscript && review && (
         <ReviewScreen

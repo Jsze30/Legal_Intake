@@ -30,6 +30,10 @@ export interface ReviewFinding {
   status: FindingStatus;
   title: string;
   explanation: string;
+  detailSummary: string;
+  supportingFacts: string[];
+  whyItMatters: string;
+  assessment: string;
   evidenceTurnIndex: number;
 }
 

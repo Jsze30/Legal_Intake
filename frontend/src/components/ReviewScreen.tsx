@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import type { Decision, IntakeReview, TranscriptCase } from '../types';
+import type { Decision, IntakeReview, ReviewFinding, TranscriptCase } from '../types';
+import { FindingDetailsPanel } from './FindingDetailsPanel';
 import { TranscriptDrawer } from './TranscriptDrawer';
 
 interface ReviewScreenProps {
@@ -19,12 +20,30 @@ const decisionCopy: Record<Decision, string> = {
 export function ReviewScreen({ transcript, review, decision, onDecision, onBack }: ReviewScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [highlightedTurn, setHighlightedTurn] = useState<number | null>(null);
+  const [selectedFinding, setSelectedFinding] = useState<ReviewFinding | null>(null);
 
   const openTranscript = (turn: number | null = null) => {
     setHighlightedTurn(turn);
     setDrawerOpen(true);
   };
   const closeTranscript = useCallback(() => setDrawerOpen(false), []);
+  const closeDetails = useCallback(() => setSelectedFinding(null), []);
+
+  const openFindingSource = () => {
+    if (!selectedFinding) return;
+    const turn = selectedFinding.evidenceTurnIndex;
+    setSelectedFinding(null);
+    openTranscript(turn);
+  };
+
+  const attentionForFinding = (finding: ReviewFinding) => {
+    const categoryTerms: Record<ReviewFinding['category'], RegExp> = {
+      Damages: /treatment|medical|injur|bill|damage/i,
+      Liability: /liability|fault|incident|witness|report/i,
+      Coverage: /coverage|insurance|policy|carrier|limit/i,
+    };
+    return review.attentionItems.find((item) => categoryTerms[finding.category].test(item));
+  };
 
   return (
     <>
@@ -39,10 +58,10 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
               <div className="case-meta">
                 <span>{review.matterType}</span><span className="dot" />
                 <span>{review.location}</span><span className="dot" />
-                <span>{review.incidentDate}</span><span className="status-text">AI review complete</span>
+                <span>{review.incidentDate}</span>
               </div>
             </div>
-            <button className="text-button" type="button" onClick={() => openTranscript()}>Read full transcript ↗</button>
+            <button className="text-button" type="button" onClick={() => openTranscript()}>Read full transcript →</button>
           </header>
 
           <section className="review-grid reveal-stage delay-2" aria-label="Case recommendation">
@@ -50,7 +69,6 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
               <article className="recommendation">
                 <div className="recommendation-top">
                   <div className="eyebrow">Finch recommendation</div>
-                  <div className="confidence">{review.confidence}</div>
                 </div>
                 <h2>{review.recommendation}</h2>
                 <p className="summary">{review.summary}</p>
@@ -61,14 +79,21 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
                   <article className="pillar" key={finding.id}>
                     <div className="pillar-head">
                       <div className="eyebrow">{finding.category}</div>
-                      <span className={`mini-status ${finding.status === 'Strong' ? 'good' : 'verify'}`}>{finding.status}</span>
                     </div>
                     <h3>{finding.title}</h3>
                     <p>{finding.explanation}</p>
-                    <button className="evidence-link" type="button" onClick={() => openTranscript(finding.evidenceTurnIndex)}>See source ↗</button>
+                    <button
+                      className="evidence-link"
+                      type="button"
+                      aria-expanded={selectedFinding?.id === finding.id}
+                      onClick={() => setSelectedFinding(selectedFinding?.id === finding.id ? null : finding)}
+                    >
+                      {selectedFinding?.id === finding.id ? 'See details ↓' : 'See details →'}
+                    </button>
                   </article>
                 ))}
               </div>
+
             </div>
 
             <aside className="review-side">
@@ -90,11 +115,22 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
                 <p className="decision-note" aria-live="polite">{decision ? decisionCopy[decision] : ''}</p>
               </section>
             </aside>
+
+            {selectedFinding && (
+              <FindingDetailsPanel
+                finding={selectedFinding}
+                evidence={transcript.transcript[selectedFinding.evidenceTurnIndex] ?? transcript.transcript[0]}
+                turnNumber={selectedFinding.evidenceTurnIndex + 1}
+                attentionItem={attentionForFinding(selectedFinding)}
+                onClose={closeDetails}
+                onSeeSource={openFindingSource}
+              />
+            )}
           </section>
 
           <button className="transcript-row reveal-stage delay-3" type="button" onClick={() => openTranscript()}>
             <span><strong>Evidence from the call</strong><span>{transcript.turnCount} turns · every finding links to a source</span></span>
-            <span className="text-button">Open transcript ↗</span>
+            <span className="text-button">Open transcript →</span>
           </button>
         </div>
       </main>
