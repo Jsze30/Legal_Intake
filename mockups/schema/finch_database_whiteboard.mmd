@@ -1,0 +1,98 @@
+erDiagram
+    CLIENTS ||--o{ INCIDENTS : "is involved in"
+    INCIDENTS ||--o{ DEFENDANTS : "involves"
+    INCIDENTS ||--o| POLICE_REPORTS : "may have"
+    INCIDENTS ||--o{ WITNESSES : "may have"
+
+    CLIENTS ||--o{ TREATMENTS : "receives"
+    PROVIDERS ||--o{ TREATMENTS : "provides"
+    INCIDENTS ||--o{ TREATMENTS : "causes"
+
+    CLIENTS ||--o{ SERVICES_RENDERED : "receives"
+    CONTACTS ||--o{ SERVICES_RENDERED : "renders"
+    INCIDENTS ||--o{ SERVICES_RENDERED : "causes"
+
+    CLIENTS ||--o{ INSURANCE_POLICIES : "may hold"
+    DEFENDANTS ||--o{ INSURANCE_POLICIES : "may hold"
+    INCIDENTS ||--o{ INSURANCE_POLICIES : "relates to"
+
+    CLIENTS {
+      uuid id PK
+      text first_name
+      text last_name
+      text phone
+      text email
+    }
+    PROVIDERS {
+      uuid id PK
+      text name
+      text provider_type
+      text phone
+      text address
+    }
+    CONTACTS {
+      uuid id PK
+      text name
+      text contact_type
+      text phone
+      text address
+    }
+    INCIDENTS {
+      uuid id PK
+      uuid client_id FK
+      text incident_type
+      timestamptz occurred_at
+      text location
+      text description
+    }
+    DEFENDANTS {
+      uuid id PK
+      uuid incident_id FK
+      text first_name
+      text last_name
+      text vehicle_description
+      text alleged_fault
+    }
+    INSURANCE_POLICIES {
+      uuid id PK
+      uuid incident_id FK
+      uuid client_id FK
+      uuid defendant_id FK
+      text insurance_type
+      text carrier_name
+      text policy_number
+      text coverage_status
+    }
+    TREATMENTS {
+      uuid id PK
+      uuid incident_id FK
+      uuid client_id FK
+      uuid provider_id FK
+      timestamptz treated_at
+      text treatment_type
+      numeric billed_amount
+    }
+    SERVICES_RENDERED {
+      uuid id PK
+      uuid incident_id FK
+      uuid client_id FK
+      uuid contact_id FK
+      text service_type
+      timestamptz rendered_at
+      numeric billed_amount
+    }
+    POLICE_REPORTS {
+      uuid id PK
+      uuid incident_id FK,UK
+      text agency_name
+      text report_number
+      text report_status
+    }
+    WITNESSES {
+      uuid id PK
+      uuid incident_id FK
+      text first_name
+      text last_name
+      text phone
+      text statement_summary
+    }
