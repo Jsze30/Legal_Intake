@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finch Intake Review</title>
+  <link rel="preconnect" href="https://use.typekit.net">
+  <link rel="stylesheet" href="https://use.typekit.net/pkn8hcj.css">
+  <style>
+    @font-face {
+      font-family: "DM Sans";
+      src: url("https://www.finchlegal.com/_next/static/media/13971731025ec697-s.p.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Source Serif 4";
+      src: url("https://www.finchlegal.com/_next/static/media/97ac91773d3121b2-s.p.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+    :root {
+      --sg-ink-300: #9098B5;
+      --sg-ink-500: #4A537A;
+      --sg-ink-700: #1F2950;
+      --sg-ink-800: #141C40;
+      --sg-ink-900: #0C1330;
+      --sg-ink-950: #070B1F;
+      --sg-indigo-50: #F1EDFE;
+      --sg-indigo-100: #E1D9FD;
+      --sg-indigo-300: #9C82F8;
+      --sg-indigo-500: #3E21F3;
+      --sg-indigo-600: #2E13C5;
+      --sg-ember-100: #FBE3D6;
+      --sg-ember-300: #EF8A60;
+      --sg-ember-500: #D2511F;
+      --sg-ember-600: #B23E13;
+      --sg-paper: #F6F1E7;
+      --sg-paper-alt: #EFE7D6;
+      --sg-white: #FFFFFF;
+      --sg-line-soft: rgba(12, 19, 48, .10);
+      --sg-line-medium: rgba(12, 19, 48, .22);
+      --sg-shadow-sm: 0 1px 2px rgba(7, 11, 31, .06), 0 0 0 1px rgba(7, 11, 31, .04);
+      --sg-shadow-md: 0 6px 16px rgba(7, 11, 31, .06), 0 2px 4px rgba(7, 11, 31, .04), 0 0 0 1px rgba(7, 11, 31, .04);
+      --sg-ease-out: cubic-bezier(.22, 1, .36, 1);
+      --sg-font-display: "p22-mackinac-pro", "Aesthet Nova", Georgia, "Times New Roman", serif;
+      --sg-font-serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+      --sg-font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --success: #1C7C44;
+      --success-bg: rgba(91, 200, 137, .12);
+      --warning: #8A6A18;
+      --warning-line: #D9A521;
+      --warning-bg: #FFF9E6;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body {
+      margin: 0;
+      background: var(--sg-paper);
+      color: var(--sg-ink-900);
+      font-family: var(--sg-font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--sg-indigo-500);
+      outline-offset: 3px;
+    }
+    .site-shell { min-height: 100vh; background: var(--sg-white); }
+    .topbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--sg-line-soft);
+      background: rgba(255, 255, 255, .96);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .container { width: min(1240px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .brand { display: inline-flex; align-items: center; text-decoration: none; }
+    .brand img { display: block; width: 111px; height: auto; }
+    .topnav { display: flex; align-items: center; gap: 12px; }
+    .topnav a {
+      color: var(--sg-ink-700);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 12px;
+      transition: color .2s var(--sg-ease-out);
+    }
+    .topnav a:hover { color: var(--sg-indigo-500); }
+    .topnav .active { color: var(--sg-ink-900); }
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: var(--sg-ink-900);
+      color: var(--sg-white);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .app-main { padding: 54px 0 86px; }
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--sg-ink-500);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .crumbs a { color: inherit; text-decoration: none; }
+    .crumbs a:hover { color: var(--sg-indigo-500); }
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 32px 0 34px;
+    }
+    .eyebrow {
+      color: var(--sg-ember-600);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 12px;
+      font-family: var(--sg-font-display);
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 400;
+      line-height: 1.03;
+      letter-spacing: -.025em;
+    }
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      color: var(--sg-ink-500);
+      font-family: var(--sg-font-serif);
+      font-size: 16px;
+    }
+    .dot { width: 3px; height: 3px; border-radius: 99px; background: var(--sg-ink-300); }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0;
+      color: var(--sg-indigo-600);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .status-pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sg-indigo-500); }
+    .text-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--sg-ink-700);
+      padding: 8px 0;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-color: var(--sg-line-medium);
+      text-underline-offset: 4px;
+      transition: color .2s var(--sg-ease-out), text-decoration-color .2s var(--sg-ease-out);
+    }
+    .text-button:hover { color: var(--sg-indigo-500); text-decoration-color: var(--sg-indigo-500); }
+    .review-grid { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(310px, .75fr); border: 1px solid var(--sg-line-medium); }
+    .review-main { min-width: 0; }
+    .recommendation { padding: clamp(40px, 4.5vw, 62px); border-bottom: 1px solid var(--sg-line-medium); }
+    .recommendation-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .confidence { color: var(--success); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .recommendation h2 {
+      margin: 24px 0 24px;
+      max-width: 14ch;
+      color: var(--sg-ink-950);
+      font-family: var(--sg-font-display);
+      font-size: clamp(40px, 5.3vw, 72px);
+      font-weight: 400;
+      line-height: .98;
+      letter-spacing: -.03em;
+    }
+    .summary {
+      max-width: 69ch;
+      margin-bottom: 0;
+      color: var(--sg-ink-700);
+      font-family: var(--sg-font-serif);
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .pillar { min-width: 0; padding: 36px 34px 38px; border-right: 1px solid var(--sg-line-medium); }
+    .pillar:last-child { border-right: 0; }
+    .pillar-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .pillar h3 {
+      margin: 16px 0 10px;
+      font-family: var(--sg-font-display);
+      font-size: 27px;
+      font-weight: 500;
+      line-height: 1.08;
+      letter-spacing: -.02em;
+    }
+    .pillar p { margin-bottom: 18px; color: var(--sg-ink-700); font-size: 14px; line-height: 1.55; }
+    .mini-status {
+      display: inline-flex;
+      padding: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .mini-status.good { color: var(--success); }
+    .mini-status.verify { color: var(--warning); }
+    .evidence-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--sg-indigo-500);
+      padding: 0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .evidence-link:hover { color: var(--sg-indigo-700); }
+    .review-side { border-left: 1px solid var(--sg-line-medium); background: var(--sg-paper); }
+    .side-section { padding: 36px 32px; border-bottom: 1px solid var(--sg-line-medium); }
+    .side-section:last-child { border-bottom: 0; }
+    .side-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 19px; }
+    .side-title h3 { margin: 0; font-family: var(--sg-font-display); font-size: 23px; font-weight: 500; letter-spacing: -.02em; }
+    .count { color: var(--sg-ink-500); font-size: 12px; font-weight: 600; }
+    .attention-list { display: grid; gap: 0; }
+    .attention-item { display: grid; grid-template-columns: 8px minmax(0, 1fr); align-items: center; gap: 12px; padding: 17px 0; border-top: 1px solid var(--sg-line-soft); }
+    .attention-item:first-child { border-top: 0; padding-top: 0; }
+    .attention-mark { width: 8px; height: 8px; border-radius: 50%; background: var(--warning-line); }
+    .attention-item b { display: block; color: var(--sg-ink-900); font-size: 13px; }
+    .actions { display: grid; gap: 9px; }
+    .btn {
+      appearance: none;
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--sg-ink-900);
+      border-radius: 6px;
+      padding: 10px 17px;
+      background: var(--sg-white);
+      color: var(--sg-ink-900);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s var(--sg-ease-out), color .2s var(--sg-ease-out), transform .18s var(--sg-ease-out), box-shadow .18s var(--sg-ease-out);
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--sg-shadow-sm); }
+    .btn-primary { border-color: var(--sg-indigo-500); background: var(--sg-indigo-500); color: var(--sg-white); }
+    .btn-primary:hover { background: var(--sg-indigo-600); }
+    .btn-quiet { border-color: var(--sg-line-medium); }
+    .decision-note { min-height: 17px; margin: 12px 0 0; color: var(--success); font-size: 12px; font-weight: 600; }
+    .transcript-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      width: 100%;
+      margin-top: 34px;
+      padding: 24px 26px;
+      border: 1px solid var(--sg-line-medium);
+      background: var(--sg-white);
+    }
+    .transcript-row strong { display: block; margin-bottom: 4px; font-family: var(--sg-font-display); font-size: 19px; font-weight: 500; }
+    .transcript-row span { color: var(--sg-ink-500); font-family: var(--sg-font-serif); font-size: 14px; }
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      border: 0;
+      background: rgba(7, 11, 31, .46);
+      opacity: 0;
+      visibility: hidden;
+      cursor: default;
+      transition: opacity .24s var(--sg-ease-out), visibility .24s;
+    }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      width: min(620px, 92vw);
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--sg-line-medium);
+      background: var(--sg-white);
+      box-shadow: 0 0 0 rgba(7, 11, 31, 0);
+      transform: translateX(100%);
+      transition: transform .34s var(--sg-ease-out), box-shadow .32s var(--sg-ease-out);
+    }
+    body.drawer-open { overflow: hidden; }
+    body.drawer-open .drawer-backdrop { opacity: 1; visibility: visible; }
+    body.drawer-open .drawer { transform: translateX(0); box-shadow: -18px 0 48px rgba(7, 11, 31, .12); }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 28px; border-bottom: 1px solid var(--sg-line-medium); }
+    .drawer-head h2 { margin: 0; font-family: var(--sg-font-display); font-size: 28px; font-weight: 500; }
+    .close {
+      appearance: none;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--sg-line-medium);
+      border-radius: 999px;
+      background: var(--sg-white);
+      color: var(--sg-ink-900);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      transition: transform .18s var(--sg-ease-out), border-color .18s var(--sg-ease-out);
+    }
+    .close:hover { transform: rotate(3deg); border-color: var(--sg-ink-900); }
+    .drawer-body { overflow: auto; padding: 28px; }
+    .turn { padding: 18px 0; border-top: 1px solid var(--sg-line-soft); }
+    .turn:first-child { border-top: 0; padding-top: 0; }
+    .turn-label { margin-bottom: 7px; color: var(--sg-ink-500); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .turn p { margin: 0; color: var(--sg-ink-800); font-family: var(--sg-font-serif); font-size: 17px; line-height: 1.55; }
+    .turn.highlight { margin: 4px -16px; padding: 18px 16px; border-top-color: transparent; background: var(--sg-indigo-50); }
+    .reveal { opacity: 0; transform: translateY(12px); }
+    .is-ready .reveal { opacity: 1; transform: translateY(0); transition: opacity .56s ease, transform .56s var(--sg-ease-out); }
+    .is-ready .delay-1 { transition-delay: 80ms; }
+    .is-ready .delay-2 { transition-delay: 160ms; }
+    .is-ready .delay-3 { transition-delay: 240ms; }
+    .is-ready .delay-4 { transition-delay: 320ms; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+    @media (max-width: 920px) {
+      .review-grid { grid-template-columns: 1fr; }
+      .review-side { border-top: 1px solid var(--sg-line-medium); border-left: 0; display: grid; grid-template-columns: 1fr 1fr; }
+      .side-section { border-right: 1px solid var(--sg-line-medium); border-bottom: 0; }
+      .side-section:last-child { border-right: 0; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 28px, 1240px); }
+      .topbar { height: 66px; }
+      .topnav a { display: none; }
+      .page-head { align-items: flex-start; flex-direction: column; }
+      .page-head .text-button { align-self: flex-start; }
+      .review-grid { border-left: 0; border-right: 0; }
+      .recommendation { padding: 28px 20px; }
+      .pillars { grid-template-columns: 1fr; }
+      .pillar { border-right: 0; border-bottom: 1px solid var(--sg-line-medium); }
+      .pillar:last-child { border-bottom: 0; }
+      .review-side { grid-template-columns: 1fr; }
+      .side-section { border-right: 0; border-bottom: 1px solid var(--sg-line-medium); }
+      .transcript-row { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="index.html" aria-label="Finch transcript intake">
+          <img src="https://www.finchlegal.com/brand/finch-logo.svg" alt="Finch">
+        </a>
+        <nav class="topnav" aria-label="Application">
+          <a class="active" href="index.html">Intakes</a>
+          <span class="avatar" aria-label="Alex Morgan">AM</span>
+        </nav>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="container">
+        <div class="crumbs reveal"><a href="index.html">Intakes</a><span>›</span><span>Review</span></div>
+
+        <header class="page-head reveal delay-1">
+          <div>
+            <div class="eyebrow">New intake</div>
+            <h1>Tamika Johnson</h1>
+            <div class="case-meta"><span>Rideshare collision</span><span class="dot"></span><span>Decatur, Georgia</span><span class="dot"></span><span>Oct 12, 2024</span><span class="status-pill">AI review complete</span></div>
+          </div>
+          <button class="text-button" type="button" data-open-transcript>Read full transcript ↗</button>
+        </header>
+
+        <section class="review-grid reveal delay-2" aria-label="Case recommendation">
+          <div class="review-main">
+            <article class="recommendation">
+              <div class="recommendation-top"><div class="eyebrow">Finch recommendation</div><div class="confidence">High confidence</div></div>
+              <h2>Sign this case.</h2>
+              <p class="summary">Substantial injury, favorable liability, and likely rideshare coverage. Verify the ride phase and policy limits.</p>
+            </article>
+
+            <div class="pillars" aria-label="Decision pillars">
+              <article class="pillar">
+                <div class="pillar-head"><div class="eyebrow">Damages</div><span class="mini-status good">Strong</span></div>
+                <h3>Severe injury</h3>
+                <p>Wrist surgery, PTSD care, $52,000 in bills, and two months off work.</p>
+                <button class="evidence-link" type="button" data-open-transcript data-target-turn="injury">See source ↗</button>
+              </article>
+              <article class="pillar">
+                <div class="pillar-head"><div class="eyebrow">Liability</div><span class="mini-status good">Strong</span></div>
+                <h3>Passenger claim</h3>
+                <p>Passenger in a T-bone crash. Police report and Lyft receipt available.</p>
+                <button class="evidence-link" type="button" data-open-transcript data-target-turn="liability">See source ↗</button>
+              </article>
+              <article class="pillar">
+                <div class="pillar-head"><div class="eyebrow">Coverage</div><span class="mini-status verify">Verify</span></div>
+                <h3>Layered policy</h3>
+                <p>Commercial Lyft policy likely. Ride phase and limits unconfirmed.</p>
+                <button class="evidence-link" type="button" data-open-transcript data-target-turn="coverage">See source ↗</button>
+              </article>
+            </div>
+          </div>
+
+          <aside class="review-side">
+            <section class="side-section">
+              <div class="side-title"><h3>Needs attention</h3><span class="count">2 items</span></div>
+              <div class="attention-list">
+                <div class="attention-item"><span class="attention-mark"></span><div><b>Confirm the Lyft ride phase</b></div></div>
+                <div class="attention-item"><span class="attention-mark"></span><div><b>Request policy declarations</b></div></div>
+              </div>
+            </section>
+            <section class="side-section">
+              <div class="side-title"><h3>Your decision</h3></div>
+              <div class="actions">
+                <button class="btn btn-primary" type="button" data-decision="Case marked to sign">Sign case</button>
+                <button class="btn btn-quiet" type="button" data-decision="Case held for attorney review">Hold for review</button>
+                <button class="btn btn-quiet" type="button" data-decision="Case marked to decline">Decline</button>
+              </div>
+              <p class="decision-note" aria-live="polite"></p>
+            </section>
+          </aside>
+        </section>
+
+        <button class="transcript-row reveal delay-3" type="button" data-open-transcript>
+          <span><strong>Evidence from the call</strong><span>33 turns · every finding links to a source</span></span>
+          <span class="text-button">Open transcript ↗</span>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <button class="drawer-backdrop" type="button" data-close-transcript aria-label="Close transcript"></button>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="transcript-title" aria-hidden="true">
+    <header class="drawer-head">
+      <div><div class="eyebrow">Source evidence</div><h2 id="transcript-title">Call transcript</h2></div>
+      <button class="close" type="button" data-close-transcript aria-label="Close transcript">×</button>
+    </header>
+    <div class="drawer-body">
+      <article class="turn" id="turn-liability"><div class="turn-label">Caller · turn 4</div><p>“On October twelfth, twenty twenty-four, I was in a Lyft headed to Hartsfield-Jackson for a work conference.”</p></article>
+      <article class="turn"><div class="turn-label">Caller · turn 6</div><p>“Victor rolled through a stop sign, and this Honda Accord slammed into us. T-boned us on the passenger side. That’s where I was sitting.”</p></article>
+      <article class="turn" id="turn-injury"><div class="turn-label">Caller · turn 10</div><p>“Fractured left wrist, distal radius, plus whiplash and cervical strain. Dr. Anna Petrov did surgery: plate and screws.”</p></article>
+      <article class="turn"><div class="turn-label">Caller · turn 12</div><p>“I’ve been diagnosed with PTSD by Dr. Lawrence Chen, a psychiatrist at Emory.”</p></article>
+      <article class="turn"><div class="turn-label">Caller · turn 18</div><p>“Medical bills are around fifty-two thousand dollars so far. My health insurance is through my employer.”</p></article>
+      <article class="turn" id="turn-coverage"><div class="turn-label">Intake specialist · turn 17</div><p>“If you were in an active Lyft ride, Lyft typically carries a commercial liability policy. We still investigate every policy.”</p></article>
+      <article class="turn"><div class="turn-label">Caller · turn 30</div><p>“The Lyft ride receipt has timestamps and the route. It shows I was an active passenger when this happened.”</p></article>
+    </div>
+  </aside>
+
+  <script>
+    const body = document.body;
+    const drawer = document.querySelector('.drawer');
+    const closeButton = document.querySelector('.close');
+    let priorFocus = null;
+
+    requestAnimationFrame(() => body.classList.add('is-ready'));
+
+    function openTranscript(target) {
+      priorFocus = document.activeElement;
+      body.classList.add('drawer-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.querySelectorAll('.turn').forEach((turn) => turn.classList.remove('highlight'));
+      if (target) {
+        const turn = document.getElementById('turn-' + target);
+        if (turn) {
+          turn.classList.add('highlight');
+          requestAnimationFrame(() => turn.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+        }
+      }
+      closeButton.focus();
+    }
+
+    function closeTranscript() {
+      body.classList.remove('drawer-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      if (priorFocus) priorFocus.focus();
+    }
+
+    document.querySelectorAll('[data-open-transcript]').forEach((button) => {
+      button.addEventListener('click', () => openTranscript(button.dataset.targetTurn));
+    });
+    document.querySelectorAll('[data-close-transcript]').forEach((button) => button.addEventListener('click', closeTranscript));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && body.classList.contains('drawer-open')) closeTranscript();
+    });
+    document.querySelectorAll('[data-decision]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-decision]').forEach((item) => item.classList.remove('btn-primary'));
+        button.classList.add('btn-primary');
+        document.querySelector('.decision-note').textContent = button.dataset.decision + '.';
+      });
+    });
+  </script>
+</body>
+</html>

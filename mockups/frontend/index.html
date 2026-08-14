@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finch Transcript Intake</title>
+  <link rel="preconnect" href="https://use.typekit.net">
+  <link rel="stylesheet" href="https://use.typekit.net/pkn8hcj.css">
+  <style>
+    @font-face {
+      font-family: "DM Sans";
+      src: url("https://www.finchlegal.com/_next/static/media/13971731025ec697-s.p.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Source Serif 4";
+      src: url("https://www.finchlegal.com/_next/static/media/97ac91773d3121b2-s.p.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+    :root {
+      --ink-300: #9098B5;
+      --ink-500: #4A537A;
+      --ink-700: #1F2950;
+      --ink-800: #141C40;
+      --ink-900: #0C1330;
+      --ink-950: #070B1F;
+      --indigo-50: #F1EDFE;
+      --indigo-100: #E1D9FD;
+      --indigo-300: #9C82F8;
+      --indigo-500: #3E21F3;
+      --indigo-600: #2E13C5;
+      --ember-300: #EF8A60;
+      --ember-500: #D2511F;
+      --ember-600: #B23E13;
+      --paper: #F6F1E7;
+      --white: #FFFFFF;
+      --line-soft: rgba(12, 19, 48, .10);
+      --line-medium: rgba(12, 19, 48, .22);
+      --shadow-sm: 0 1px 2px rgba(7, 11, 31, .06), 0 0 0 1px rgba(7, 11, 31, .04);
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --font-display: "p22-mackinac-pro", "Aesthet Nova", Georgia, "Times New Roman", serif;
+      --font-serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+      --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body {
+      margin: 0;
+      background: var(--white);
+      color: var(--ink-900);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 2px solid var(--indigo-500);
+      outline-offset: 3px;
+    }
+    [hidden] { display: none !important; }
+    .container { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, .96);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: inline-flex; align-items: center; }
+    .brand img { display: block; width: 111px; height: auto; }
+    .topnav { display: flex; align-items: center; gap: 22px; }
+    .topnav a { color: var(--ink-900); text-decoration: none; font-size: 14px; font-weight: 600; }
+    .avatar { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--ink-900); color: var(--white); font-size: 12px; font-weight: 700; }
+    main { min-height: calc(100vh - 76px); padding: 70px 0 90px; }
+    .eyebrow { color: var(--ember-600); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin: 12px 0 18px; font-family: var(--font-display); font-size: clamp(48px, 6vw, 76px); font-weight: 400; line-height: .99; letter-spacing: -.03em; }
+    .lede { max-width: 610px; margin-bottom: 0; color: var(--ink-700); font-family: var(--font-serif); font-size: 19px; line-height: 1.56; }
+    .upload-head { max-width: 760px; margin-bottom: 42px; }
+    .upload-zone {
+      width: 100%;
+      min-height: 300px;
+      display: grid;
+      place-items: center;
+      border: 1.5px dashed var(--line-medium);
+      background: linear-gradient(180deg, var(--white) 0, rgba(246, 241, 231, .45) 100%);
+      cursor: pointer;
+      transition: border-color .2s var(--ease-out), background .2s var(--ease-out), transform .2s var(--ease-out);
+    }
+    .upload-zone:hover, .upload-zone.is-dragging { border-color: var(--indigo-500); background: var(--indigo-50); }
+    .upload-zone.is-dragging { transform: translateY(-2px); }
+    .upload-content { max-width: 460px; padding: 48px 28px; text-align: center; }
+    .upload-mark { width: 46px; height: 46px; margin: 0 auto 22px; color: var(--indigo-500); }
+    .upload-content h2 { margin-bottom: 10px; font-family: var(--font-display); font-size: 29px; font-weight: 500; letter-spacing: -.02em; }
+    .upload-content p { margin-bottom: 24px; color: var(--ink-500); font-family: var(--font-serif); font-size: 16px; line-height: 1.5; }
+    .button {
+      appearance: none;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--indigo-500);
+      border-radius: 6px;
+      padding: 11px 20px;
+      background: var(--indigo-500);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s var(--ease-out), transform .18s var(--ease-out), box-shadow .18s var(--ease-out);
+    }
+    .button:hover { transform: translateY(-1px); background: var(--indigo-600); box-shadow: var(--shadow-sm); }
+    .button:disabled { border-color: var(--line-medium); background: var(--line-soft); color: var(--ink-300); cursor: not-allowed; transform: none; box-shadow: none; }
+    .text-button { appearance: none; border: 0; padding: 4px 0; background: transparent; color: var(--ink-700); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline; text-decoration-color: var(--line-medium); text-underline-offset: 4px; }
+    .text-button:hover { color: var(--indigo-500); text-decoration-color: var(--indigo-500); }
+    .preview-action { margin-top: 20px; text-align: center; }
+    .format-note { display: flex; justify-content: space-between; gap: 20px; margin-top: 18px; color: var(--ink-500); font-size: 12px; }
+    .error-box { margin-top: 24px; padding: 16px 18px; border-left: 3px solid var(--ember-500); background: rgba(251, 227, 214, .48); color: var(--ink-800); font-size: 13px; line-height: 1.5; }
+    .selection-view { animation: reveal .56s var(--ease-out) both; }
+    .selection-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 34px; }
+    .selection-head h1 { margin-bottom: 10px; }
+    .selection-head .lede { max-width: 680px; }
+    .file-summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 22px; padding: 17px 20px; border: 1px solid var(--line-medium); background: var(--paper); }
+    .file-summary-main { min-width: 0; display: flex; align-items: center; gap: 14px; }
+    .file-icon { width: 23px; height: 23px; flex: 0 0 auto; color: var(--ink-700); }
+    .file-name { overflow: hidden; color: var(--ink-900); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .file-count { margin-top: 2px; color: var(--ink-500); font-size: 12px; }
+    .validation-note { margin-bottom: 16px; padding: 13px 16px; border-left: 3px solid var(--ember-500); background: rgba(251, 227, 214, .45); color: var(--ink-800); font-size: 13px; }
+    .transcript-list { max-height: 530px; overflow-y: auto; border: 1px solid var(--line-medium); background: var(--white); scrollbar-color: var(--ink-300) transparent; }
+    .transcript-option {
+      appearance: none;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) 92px;
+      align-items: center;
+      gap: 20px;
+      border: 0;
+      border-bottom: 1px solid var(--line-soft);
+      border-left: 3px solid transparent;
+      padding: 23px 22px 23px 19px;
+      background: var(--white);
+      color: var(--ink-900);
+      text-align: left;
+      cursor: pointer;
+      transition: background .18s var(--ease-out), border-color .18s var(--ease-out);
+    }
+    .transcript-option:last-child { border-bottom: 0; }
+    .transcript-option:hover { background: rgba(246, 241, 231, .55); }
+    .transcript-option.is-selected { border-left-color: var(--indigo-500); background: var(--indigo-50); }
+    .radio-mark { width: 18px; height: 18px; display: grid; place-items: center; border: 1.5px solid var(--ink-300); border-radius: 50%; background: var(--white); }
+    .radio-mark::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: transparent; transform: scale(.5); transition: background .16s var(--ease-out), transform .16s var(--ease-out); }
+    .is-selected .radio-mark { border-color: var(--indigo-500); }
+    .is-selected .radio-mark::after { background: var(--indigo-500); transform: scale(1); }
+    .option-copy { min-width: 0; display: block; }
+    .option-kicker { display: block; margin-bottom: 7px; color: var(--ember-600); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .option-preview { display: -webkit-box; overflow: hidden; color: var(--ink-800); font-family: var(--font-serif); font-size: 16px; line-height: 1.42; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+    .option-id { display: block; margin-top: 7px; color: var(--ink-500); font-size: 11px; }
+    .turn-count { color: var(--ink-500); font-size: 12px; font-weight: 600; text-align: right; }
+    .action-bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0 0; }
+    .selection-count { color: var(--ink-700); font-family: var(--font-serif); font-size: 15px; }
+    .selection-count strong { color: var(--ink-900); font-family: var(--font-sans); font-size: 13px; }
+    .contract-note { margin: 12px 0 0; color: var(--ink-500); font-size: 11px; text-align: right; }
+    .processing-view { max-width: 760px; margin: 70px auto 0; text-align: center; animation: reveal .46s var(--ease-out) both; }
+    .processing-view h1 { margin-bottom: 40px; }
+    .process-list { border-top: 1px solid var(--line-medium); }
+    .process-step { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 19px 0; border-bottom: 1px solid var(--line-soft); color: var(--ink-300); font-size: 14px; font-weight: 600; transition: color .3s var(--ease-out); }
+    .process-step::after { content: "Waiting"; color: var(--ink-300); font-size: 11px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+    .process-step.is-active { color: var(--ink-900); }
+    .process-step.is-active::after { content: "Working"; color: var(--indigo-500); }
+    .process-step.is-complete { color: var(--ink-700); }
+    .process-step.is-complete::after { content: "Complete"; color: #1C7C44; }
+    @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+    @media (max-width: 720px) {
+      .container { width: min(100% - 28px, 1180px); }
+      main { padding-top: 48px; }
+      .selection-head { align-items: flex-start; flex-direction: column; }
+      .transcript-option { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding-inline: 15px; }
+      .turn-count { grid-column: 2; text-align: left; }
+      .action-bar { align-items: stretch; flex-direction: column; }
+      .action-bar .button { width: 100%; }
+      .contract-note { text-align: left; }
+      .format-note { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html" aria-label="Finch transcript intake"><img src="https://www.finchlegal.com/brand/finch-logo.svg" alt="Finch"></a>
+      <nav class="topnav" aria-label="Application"><a href="index.html">Intakes</a><span class="avatar" aria-label="Alex Morgan">AM</span></nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container" id="upload-view">
+      <header class="upload-head">
+        <div class="eyebrow">New intake</div>
+        <h1>Upload transcripts.</h1>
+        <p class="lede">Upload the demo dataset, then choose the single call you want Finch to analyze.</p>
+      </header>
+
+      <label class="upload-zone" id="upload-zone" for="file-input">
+        <input id="file-input" type="file" hidden>
+        <span class="upload-content">
+          <svg class="upload-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 33V9m0 0-9 9m9-9 9 9M9 31v6a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>Drop the JSONL file here</h2>
+          <p>Each line should contain one JSON object with a transcript array of speaker turns.</p>
+          <span class="button">Choose file</span>
+        </span>
+      </label>
+      <div class="preview-action"><button class="text-button" id="preview-button" type="button">Preview with sample data</button></div>
+      <div class="format-note"><span>Any filename is accepted, including files without an extension.</span><span>Parsing happens locally.</span></div>
+      <div class="error-box" id="upload-error" role="alert" hidden></div>
+    </section>
+
+    <section class="container selection-view" id="selection-view" hidden>
+      <header class="selection-head">
+        <div>
+          <div class="eyebrow">Intake review</div>
+          <h1>Choose a transcript.</h1>
+          <p class="lede" id="selection-lede">Select the one call you want to analyze.</p>
+        </div>
+      </header>
+
+      <div class="file-summary">
+        <div class="file-summary-main">
+          <svg class="file-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2Z" stroke="currentColor" stroke-width="1.6"/><path d="M14 2v5h4M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div><div class="file-name" id="file-name"></div><div class="file-count" id="file-count"></div></div>
+        </div>
+        <button class="text-button" id="replace-button" type="button">Replace file</button>
+      </div>
+
+      <div class="validation-note" id="validation-note" hidden></div>
+      <div class="transcript-list" id="transcript-list" role="radiogroup" aria-label="Available transcripts"></div>
+      <div class="action-bar">
+        <div class="selection-count" id="selection-count">No transcript selected</div>
+        <div>
+          <button class="button" id="analyze-button" type="button" disabled>Analyze transcript</button>
+          <p class="contract-note">Only the selected ID and transcript will be analyzed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container processing-view" id="processing-view" hidden>
+      <div class="eyebrow">Finch intake</div>
+      <h1>Analyzing transcript.</h1>
+      <div class="process-list">
+        <div class="process-step" id="step-read">Reading the call</div>
+        <div class="process-step" id="step-assess">Assessing damages, liability, and coverage</div>
+        <div class="process-step" id="step-link">Linking findings to source evidence</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const uploadView = document.getElementById('upload-view');
+    const selectionView = document.getElementById('selection-view');
+    const processingView = document.getElementById('processing-view');
+    const fileInput = document.getElementById('file-input');
+    const uploadZone = document.getElementById('upload-zone');
+    const uploadError = document.getElementById('upload-error');
+    const transcriptList = document.getElementById('transcript-list');
+    const analyzeButton = document.getElementById('analyze-button');
+    const selectionCount = document.getElementById('selection-count');
+    let importedCases = [];
+    let selectedIndex = -1;
+
+    const previewCases = [
+      { id: 'a52e68d9-1230-44e9-8e42-f5bcb304f8b7', turns: 29, preview: "Hi Carlos. I'm calling because I slipped and fell at a grocery store a few months back." },
+      { id: 'd3f899da-d6f7-41e7-a8cb-6fb8b055b882', turns: 29, preview: "Hi Brenda, thanks for taking my call. My name is Priya Patel. I was in a car accident." },
+      { id: 'ed261d89-c76b-4ec8-8e7f-cb6a9f662b14', turns: 33, preview: "Hi Alex. My name is Marcus Deshawn Williams. I was in a car accident last summer." },
+      { id: '892cde08-34cb-4d9f-b64d-679827a9a65a', turns: 35, preview: "My name is Robert Chen. I need to talk to somebody about a bad wreck with a semi truck." },
+      { id: '63b564e4-ab4a-469b-88b4-72492f8e09fe', turns: 33, preview: "My name is Sandra Reeves. I'm calling about my daughter. Something terrible happened." },
+      { id: 'cac3df82-f1fa-4dfa-bbfe-4d4c18cf0a59', turns: 30, preview: "My name is Darnell Marcus Washington. I am a journeyman electrician here in Atlanta." },
+      { id: 'ecb99c86-138b-4b5c-a25f-fb26be6b6e79', turns: 34, preview: "This is Tyler Nakamura. I'm calling because I got hurt by a blender." },
+      { id: 'da9e2eaf-c7e0-4062-b81b-5b5127419fc8', turns: 30, preview: "My name is Jesse Antonio Martinez. I need to talk about a motorcycle collision." },
+      { id: '68808138-faf4-4e73-9d3a-fc8a770229ba', turns: 31, preview: "My name is Angela Denise Foster. I was hit by a car in a crosswalk in May." },
+      { id: '41b5e932-2d17-4ac6-943f-c10eb281270e', turns: 25, preview: "My name is David Hyun Park. A friend told me I should call a lawyer after a car thing." },
+      { id: '30b0bdb6-ba20-4099-afcd-6064022237c2', turns: 31, preview: "My name is Carmen Lucia Delgado. I slipped on black ice in my apartment parking lot." },
+      { id: '3be963bb-fe17-4095-b251-95703038093b', turns: 28, preview: "I'm Kevin Michael O'Brien. I'm not even totally sure I should be doing this." },
+      { id: '9e4c72df-90c3-4fae-bfd0-6d7ff75abf6f', turns: 33, preview: "Hi Alex, I'm Tamika. I was in a really bad rideshare crash last fall." },
+      { id: 'b4067cef-f5a4-410c-acc5-f1fced84c3cc', turns: 28, preview: "This is Jennifer Nakamura-Smith. I'm calling about a trip-and-fall on a Denver sidewalk." }
+    ];
+
+    function showError(message) {
+      uploadError.textContent = message;
+      uploadError.hidden = false;
+    }
+
+    function firstCallerText(transcript) {
+      const caller = transcript.find((turn) => String(turn.speaker || '').toLowerCase().includes('caller'));
+      return caller ? caller.text : transcript[0]?.text || 'Transcript ready for review.';
+    }
+
+    function parseJsonl(text) {
+      const lines = text.split(/\r?\n/).map((line, index) => ({ text: line.trim(), number: index + 1 })).filter((line) => line.text);
+      const valid = [];
+      const invalid = [];
+      for (const line of lines) {
+        try {
+          const value = JSON.parse(line.text);
+          const hasTranscript = Array.isArray(value.transcript) && value.transcript.length > 0;
+          const validTurns = hasTranscript && value.transcript.every((turn) => turn && typeof turn.speaker === 'string' && typeof turn.text === 'string');
+          if (!validTurns) throw new Error('Expected a transcript array containing speaker and text fields.');
+          valid.push({
+            id: typeof value.id === 'string' ? value.id : 'transcript-' + line.number,
+            transcript: value.transcript,
+            turns: value.transcript.length,
+            preview: firstCallerText(value.transcript)
+          });
+        } catch (error) {
+          invalid.push({ line: line.number, reason: error.message });
+        }
+      }
+      return { valid, invalid };
+    }
+
+    function renderCases(filename, cases, invalid) {
+      importedCases = cases;
+      selectedIndex = -1;
+      transcriptList.replaceChildren();
+      document.getElementById('file-name').textContent = filename;
+      document.getElementById('file-count').textContent = cases.length + (cases.length === 1 ? ' transcript ready' : ' transcripts ready');
+      document.getElementById('selection-lede').textContent = cases.length + ' transcripts found. Select the one call you want Finch to analyze.';
+      const validationNote = document.getElementById('validation-note');
+      if (invalid.length) {
+        validationNote.textContent = invalid.length + ' invalid ' + (invalid.length === 1 ? 'line was' : 'lines were') + ' skipped: ' + invalid.map((item) => 'line ' + item.line).join(', ') + '.';
+        validationNote.hidden = false;
+      } else {
+        validationNote.hidden = true;
+      }
+      cases.forEach((item, index) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'transcript-option';
+        option.setAttribute('role', 'radio');
+        option.setAttribute('aria-checked', 'false');
+        option.dataset.index = String(index);
+
+        const radio = document.createElement('span');
+        radio.className = 'radio-mark';
+        radio.setAttribute('aria-hidden', 'true');
+
+        const copy = document.createElement('span');
+        copy.className = 'option-copy';
+        const kicker = document.createElement('span');
+        kicker.className = 'option-kicker';
+        kicker.textContent = 'Transcript ' + String(index + 1).padStart(2, '0');
+        const preview = document.createElement('span');
+        preview.className = 'option-preview';
+        preview.textContent = '“' + item.preview.replace(/[“”]/g, '').trim() + '”';
+        const id = document.createElement('span');
+        id.className = 'option-id';
+        id.textContent = item.id.slice(0, 8);
+        copy.append(kicker, preview, id);
+
+        const turns = document.createElement('span');
+        turns.className = 'turn-count';
+        turns.textContent = item.turns + ' turns';
+        option.append(radio, copy, turns);
+        option.addEventListener('click', () => selectCase(index));
+        transcriptList.appendChild(option);
+      });
+      uploadView.hidden = true;
+      processingView.hidden = true;
+      selectionView.hidden = false;
+      selectionCount.textContent = 'No transcript selected';
+      analyzeButton.disabled = true;
+    }
+
+    function selectCase(index) {
+      selectedIndex = index;
+      [...transcriptList.children].forEach((option, optionIndex) => {
+        const selected = optionIndex === index;
+        option.classList.toggle('is-selected', selected);
+        option.setAttribute('aria-checked', String(selected));
+      });
+      selectionCount.innerHTML = '<strong>1 transcript selected</strong> · Transcript ' + String(index + 1).padStart(2, '0');
+      analyzeButton.disabled = false;
+    }
+
+    async function handleFile(file) {
+      uploadError.hidden = true;
+      try {
+        const result = parseJsonl(await file.text());
+        if (!result.valid.length) {
+          showError('No valid transcripts were found. Each nonempty line must be a complete JSON object with a transcript array.');
+          return;
+        }
+        renderCases(file.name, result.valid, result.invalid);
+      } catch (error) {
+        showError('The file could not be read. Please choose the JSONL dataset again.');
+      }
+    }
+
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+    uploadZone.addEventListener('dragover', (event) => { event.preventDefault(); uploadZone.classList.add('is-dragging'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('is-dragging'));
+    uploadZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      uploadZone.classList.remove('is-dragging');
+      if (event.dataTransfer.files[0]) handleFile(event.dataTransfer.files[0]);
+    });
+    document.getElementById('replace-button').addEventListener('click', () => {
+      fileInput.value = '';
+      selectionView.hidden = true;
+      uploadView.hidden = false;
+      fileInput.click();
+    });
+    document.getElementById('preview-button').addEventListener('click', () => renderCases('finch eng onsite - transcripts', previewCases, []));
+
+    const previewParams = new URLSearchParams(window.location.search);
+    if (previewParams.has('preview')) {
+      renderCases('finch eng onsite - transcripts', previewCases, []);
+      const previewSelection = Number(previewParams.get('select'));
+      if (Number.isInteger(previewSelection) && previewSelection > 0 && previewSelection <= previewCases.length) {
+        selectCase(previewSelection - 1);
+        requestAnimationFrame(() => {
+          const selectedRow = transcriptList.children[previewSelection - 1];
+          transcriptList.scrollTop = selectedRow.offsetTop
+            - (transcriptList.clientHeight / 2)
+            + (selectedRow.clientHeight / 2);
+        });
+      }
+    }
+
+    analyzeButton.addEventListener('click', () => {
+      if (selectedIndex < 0) return;
+      const selected = importedCases[selectedIndex];
+      const payload = selected.transcript ? { id: selected.id, transcript: selected.transcript } : { id: selected.id, transcript: [] };
+      sessionStorage.setItem('finch-selected-transcript', JSON.stringify(payload));
+      selectionView.hidden = true;
+      processingView.hidden = false;
+      const steps = [document.getElementById('step-read'), document.getElementById('step-assess'), document.getElementById('step-link')];
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const interval = reduced ? 30 : 480;
+      steps[0].classList.add('is-active');
+      setTimeout(() => { steps[0].className = 'process-step is-complete'; steps[1].classList.add('is-active'); }, interval);
+      setTimeout(() => { steps[1].className = 'process-step is-complete'; steps[2].classList.add('is-active'); }, interval * 2);
+      setTimeout(() => {
+        steps[2].className = 'process-step is-complete';
+        window.location.href = 'review.html';
+      }, interval * 3);
+    });
+  </script>
+</body>
+</html>
