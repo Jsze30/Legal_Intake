@@ -4,3 +4,7 @@ db_schema.png
 info.png
 .lavish
 finch_references
+backend/node_modules
+backend/dist
+backend/coverage
+backend/.env
