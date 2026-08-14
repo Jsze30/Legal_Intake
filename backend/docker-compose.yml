@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: finch
+      POSTGRES_USER: finch
+      POSTGRES_PASSWORD: finch
+    ports:
+      - "5432:5432"
+    volumes:
+      - finch_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finch -d finch"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  api:
+    build: .
+    command: ["sh", "-c", "node dist/cli/migrate.js && node dist/server.js"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://finch:finch@postgres:5432/finch
+      HOST: 0.0.0.0
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3001/ready').then((response) => { if (!response.ok) process.exit(1); }).catch(() => process.exit(1));
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  worker:
+    build: .
+    command: ["node", "dist/worker.js"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://finch:finch@postgres:5432/finch
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+volumes:
+  finch_postgres_data:

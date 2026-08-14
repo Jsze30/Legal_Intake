@@ -1,0 +1,21 @@
+{
+  "source": "manual",
+  "externalReference": "example-call-001",
+  "transcript": [
+    {
+      "speaker": "Agent",
+      "startedAt": "00:00",
+      "text": "Please tell me what happened."
+    },
+    {
+      "speaker": "Caller",
+      "startedAt": "00:04",
+      "text": "I was rear-ended in Austin last Friday. An ambulance took me to Central Hospital, and I was told I had a concussion."
+    },
+    {
+      "speaker": "Caller",
+      "startedAt": "00:15",
+      "text": "The other driver said they had State Farm, but I do not have the policy number. Austin Police gave me report number APD-1234."
+    }
+  ]
+}
