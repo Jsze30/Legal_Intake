@@ -1,5 +1,11 @@
 import type { IntakeReview, ReviewFinding, TranscriptCase } from '../types';
+import { createDemoIntakeResult, waitForDemoResult } from './demo-analysis';
 import { processIntake, type IntakeRequestOptions, type IntakeResult } from './intakes-api';
+
+export interface AnalysisOptions extends IntakeRequestOptions {
+  demoDelayMs?: number;
+  demoMode?: boolean;
+}
 
 function clean(value: string | null | undefined): string | null {
   const normalized = value?.trim();
@@ -62,8 +68,12 @@ function findEvidenceTurn(
     .map((term) => term.toLocaleLowerCase()))];
   let bestIndex = -1;
   let bestScore = 0;
+  const firstCallerIndex = transcript.transcript.findIndex((turn) => (
+    turn.speaker.toLowerCase().includes('caller')
+  ));
 
   transcript.transcript.forEach((turn, index) => {
+    if (firstCallerIndex >= 0 && !turn.speaker.toLowerCase().includes('caller')) return;
     const text = turn.text.toLocaleLowerCase();
     const termScore = terms.filter((term) => text.includes(term)).length * 2;
     const fallbackScore = fallback.test(turn.text) ? 1 : 0;
@@ -73,7 +83,7 @@ function findEvidenceTurn(
       bestIndex = index;
     }
   });
-  return bestIndex >= 0 ? bestIndex : 0;
+  return bestIndex >= 0 ? bestIndex : Math.max(firstCallerIndex, 0);
 }
 
 function amountIsPositive(value: string | number | null): boolean {
@@ -279,8 +289,14 @@ function buildReview(transcript: TranscriptCase, result: IntakeResult): IntakeRe
 
 export async function analyzeTranscript(
   transcript: TranscriptCase,
-  options: IntakeRequestOptions = {},
+  options: AnalysisOptions = {},
 ): Promise<IntakeReview> {
+  const demoMode = options.demoMode ?? import.meta.env.VITE_DEMO_MODE === 'true';
+  if (demoMode) {
+    await waitForDemoResult(options.demoDelayMs ?? 1_400, options.signal);
+    return buildReview(transcript, createDemoIntakeResult(transcript));
+  }
+
   const result = await processIntake(transcript, options);
   return buildReview(transcript, result);
 }

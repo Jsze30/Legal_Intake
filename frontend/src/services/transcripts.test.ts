@@ -1,5 +1,30 @@
-import { describe, expect, it } from 'vitest';
-import { parseJsonl } from './transcripts';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { loadSampleBatch, parseJsonl } from './transcripts';
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+});
+
+describe('loadSampleBatch', () => {
+  it.each([
+    ['true', 'fictional-demo-transcripts.jsonl'],
+    ['false', 'finch eng onsite - transcripts'],
+  ])('labels the sample for demo mode %s', async (demoMode, filename) => {
+    vi.stubEnv('VITE_DEMO_MODE', demoMode);
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      id: 'sample', transcript: [{ speaker: 'Caller', text: 'Hello.' }],
+    })));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const batch = await loadSampleBatch();
+
+    expect(fetchMock).toHaveBeenCalledWith('/sample-transcripts.jsonl');
+    expect(batch.filename).toBe(filename);
+    expect(batch.transcripts).toHaveLength(1);
+    expect(batch.issues).toEqual([]);
+  });
+});
 
 describe('parseJsonl', () => {
   it('imports one transcript per line and ignores historical outcomes', () => {

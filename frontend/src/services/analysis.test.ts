@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import demoTranscripts from '../../demo-public/sample-transcripts.jsonl?raw';
 import { analyzeTranscript, inferClientName } from './analysis';
+import { createDemoIntakeResult } from './demo-analysis';
+import { parseJsonl } from './transcripts';
 import type { TranscriptCase } from '../types';
 
 const intakeId = '2fdd8754-5a63-4e96-b8f8-f54e24f90ae7';
@@ -30,6 +33,63 @@ afterEach(() => {
 });
 
 describe('analyzeTranscript', () => {
+  it('builds a complete local review in demo mode without calling the backend', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const transcript = parseJsonl(demoTranscripts, 'demo.jsonl').transcripts[12];
+    const review = await analyzeTranscript(transcript, {
+      demoMode: true,
+      demoDelayMs: 0,
+    });
+
+    expect(review).toMatchObject({
+      caseName: 'Alyssa Renee Thompson',
+      matterType: 'Rideshare Collision',
+      location: 'Ashland Avenue and Birch Street, Atlanta',
+      incidentDate: 'March 22, 2025',
+      recommendation: 'Sign this case.',
+    });
+    expect(review.findings[0].assessment).toContain('$58,400');
+    expect(review.findings[1].assessment).toContain('25-AT-64182');
+    expect(review.findings[2].assessment).toContain('ride phase');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('provides matching fixture facts and evidence for every fictional sample call', async () => {
+    const batch = parseJsonl(demoTranscripts, 'demo.jsonl');
+    expect(batch.issues).toEqual([]);
+    expect(batch.transcripts).toHaveLength(14);
+    expect(new Set(batch.transcripts.map((transcript) => transcript.id)).size).toBe(14);
+    const recommendations = new Set<string>();
+
+    for (const transcript of batch.transcripts) {
+      const text = transcript.transcript.map((turn) => turn.text).join(' ');
+      const result = createDemoIntakeResult(transcript);
+      const review = await analyzeTranscript(transcript, { demoMode: true, demoDelayMs: 0 });
+      const name = `${result.client?.firstName} ${result.client?.lastName}`;
+
+      expect(result.client?.firstName).toBeTruthy();
+      expect(result.incident?.location).toBeTruthy();
+      expect(result.incident?.occurredAtText).toBeTruthy();
+      expect(text).toContain(name);
+      expect(text).toContain(result.incident!.location!);
+      expect(text).toContain(result.incident!.occurredAtText!);
+      expect(review.caseName).toBe(name);
+      for (const policy of result.insurancePolicies) expect(text).toContain(policy.carrierName!);
+      for (const treatment of result.treatments) {
+        expect(text).toContain(`$${Number(treatment.billedAmount).toLocaleString('en-US')}`);
+      }
+      if (result.policeReport) expect(text).toContain(result.policeReport.reportNumber!);
+      for (const finding of review.findings) {
+        expect(transcript.transcript[finding.evidenceTurnIndex]?.speaker).toBe('Caller');
+      }
+      recommendations.add(review.recommendation);
+    }
+
+    expect(recommendations).toEqual(new Set(['Sign this case.', 'Review this case.']));
+  });
+
   it('submits the transcript and builds an evidence-linked review from backend results', async () => {
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(jsonResponse({ id: intakeId, status: 'received', failureReason: null }, 202))

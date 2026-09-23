@@ -65,5 +65,8 @@ export async function loadSampleBatch(): Promise<ImportBatch> {
   if (!response.ok) {
     throw new Error('The sample transcript file could not be loaded.');
   }
-  return parseJsonl(await response.text(), 'finch eng onsite - transcripts');
+  const filename = import.meta.env.VITE_DEMO_MODE === 'true'
+    ? 'fictional-demo-transcripts.jsonl'
+    : 'finch eng onsite - transcripts';
+  return parseJsonl(await response.text(), filename);
 }
