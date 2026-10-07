@@ -1,6 +1,6 @@
 import type { Decision, ImportBatch, IntakeReview, TranscriptCase } from '../types';
 
-const STORAGE_KEY = 'finch-intake-demo-v1';
+const STORAGE_KEY = 'legal-intake-demo-v1';
 
 export interface StoredAppState {
   batch: ImportBatch | null;

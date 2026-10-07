@@ -60,7 +60,7 @@ export function UploadScreen({ onImport }: UploadScreenProps) {
         <header className="upload-head">
           <div className="eyebrow">New intake</div>
           <h1>Upload transcripts.</h1>
-          <p className="lede">Upload the dataset, then choose the single call you want Finch to analyze.</p>
+          <p className="lede">Upload the dataset, then choose the single call you want to analyze.</p>
         </header>
 
         <div
@@ -83,7 +83,7 @@ export function UploadScreen({ onImport }: UploadScreenProps) {
               <path d="M24 33V9m0 0-9 9m9-9 9 9M9 31v6a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <h2>Drop the file here</h2>
-            <p>Upload your call for Finch to analyze.</p>
+            <p>Upload your call to analyze.</p>
             <span className="button">Choose file</span>
           </div>
         </div>

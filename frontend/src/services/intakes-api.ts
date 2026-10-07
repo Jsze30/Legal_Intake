@@ -96,7 +96,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     response = await fetch(`${apiBaseUrl}${path}`, init);
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error;
-    throw new IntakeApiError('The Finch backend could not be reached. Make sure the API is running.');
+    throw new IntakeApiError('The intake backend could not be reached. Make sure the API is running.');
   }
 
   if (!response.ok) {

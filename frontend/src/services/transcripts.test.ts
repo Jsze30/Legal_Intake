@@ -9,7 +9,7 @@ afterEach(() => {
 describe('loadSampleBatch', () => {
   it.each([
     ['true', 'fictional-demo-transcripts.jsonl'],
-    ['false', 'finch eng onsite - transcripts'],
+    ['false', 'sample-transcripts.jsonl'],
   ])('labels the sample for demo mode %s', async (demoMode, filename) => {
     vi.stubEnv('VITE_DEMO_MODE', demoMode);
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({

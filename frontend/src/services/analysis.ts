@@ -195,14 +195,14 @@ function buildReview(transcript: TranscriptCase, result: IntakeResult): IntakeRe
           ? 'Medical treatment is identified, but severity and supporting records still need verification.'
           : 'No medical treatment was extracted from the transcript.',
       detailSummary: hasTreatment
-        ? `Finch identified ${result.treatments.length} treatment entr${result.treatments.length === 1 ? 'y' : 'ies'} in the extracted intake. The combination of diagnoses, treatment intensity, providers, and reported charges informs the damages assessment, but the value remains dependent on records, causation, prognosis, and any continuing limitations.`
+        ? `The analysis identified ${result.treatments.length} treatment entr${result.treatments.length === 1 ? 'y' : 'ies'} in the extracted intake. The combination of diagnoses, treatment intensity, providers, and reported charges informs the damages assessment, but the value remains dependent on records, causation, prognosis, and any continuing limitations.`
         : 'The extracted intake does not contain enough medical information to evaluate injury severity, treatment duration, or likely case value. Those facts need to be collected before damages can be assessed reliably.',
       supportingFacts: treatmentFacts.length ? treatmentFacts : ['No specific treatment, diagnosis, provider, or billed amount was extracted.'],
       whyItMatters: hasTreatment
         ? `${primaryDiagnosis} requiring ${primaryTreatment}${chargesText ? ` with ${chargesText} in reported charges` : ''} indicates more than minor, self-limited harm. Treatment intensity and objective diagnosis are central to both case value and the credibility of the claimed limitations.`
-        : 'Without a diagnosis, treatment course, provider, or billed amount, Finch cannot distinguish a significant injury from temporary symptoms or estimate the likely damages range.',
+        : 'Without a diagnosis, treatment course, provider, or billed amount, the analysis cannot distinguish a significant injury from temporary symptoms or estimate the likely damages range.',
       assessment: hasTreatment
-        ? `The present damages assessment is supported by treatment through ${providerText}${chargesText ? ` and ${chargesText} in extracted charges` : ''}. Finch should obtain the medical records, itemized bills, causation opinions, prognosis, and work-loss documentation before treating the damages picture as complete.`
+        ? `The present damages assessment is supported by treatment through ${providerText}${chargesText ? ` and ${chargesText} in extracted charges` : ''}. Obtain the medical records, itemized bills, causation opinions, prognosis, and work-loss documentation before treating the damages picture as complete.`
         : 'The transcript does not provide enough medical detail for a reliable damages assessment. Treatment history, current symptoms, prognosis, prior similar conditions, and economic losses remain open.',
       evidenceTurnIndex: findEvidenceTurn(transcript, treatmentText, /surgery|hospital|doctor|treatment|therapy|injur|pain/i),
     },
@@ -215,15 +215,15 @@ function buildReview(transcript: TranscriptCase, result: IntakeResult): IntakeRe
         ? 'The intake identifies fault details, a police report, or a witness that may support liability.'
         : 'Confirm the incident sequence, responsible parties, witnesses, and available documentation.',
       detailSummary: hasLiabilitySupport
-        ? 'Finch found independent liability indicators beyond the existence of an incident, including attributed fault, official reporting, or witness information. The next step is to compare the caller account against the report, physical evidence, and third-party statements for consistency.'
+        ? 'The analysis found independent liability indicators beyond the existence of an incident, including attributed fault, official reporting, or witness information. The next step is to compare the caller account against the report, physical evidence, and third-party statements for consistency.'
         : 'The current intake describes an incident but does not provide enough independent support to make a confident liability assessment. Fault allocation, documentation, and possible comparative negligence remain open.',
       supportingFacts: liabilityFacts.length ? liabilityFacts : ['No police report, witness account, or specific allegation of fault was extracted.'],
       whyItMatters: hasLiabilitySupport
-        ? `${allegedFault ? `The specific allegation that ${allegedFault.replace(/\.$/, '')}` : 'The specific fault account'}${reportReference ? `, together with ${reportReference},` : ''} gives Finch facts that can be tested against independent evidence. That is materially stronger than a conclusion that the other party was simply at fault.`
+        ? `${allegedFault ? `The specific allegation that ${allegedFault.replace(/\.$/, '')}` : 'The specific fault account'}${reportReference ? `, together with ${reportReference},` : ''} provides facts that can be tested against independent evidence. That is materially stronger than a conclusion that the other party was simply at fault.`
         : 'A viable claim requires a defensible account of who owed a duty, what they did wrong, and how that conduct caused the incident. Those elements are not yet supported by independent details in the extracted intake.',
       assessment: hasLiabilitySupport
         ? `${incidentAccount ? `The caller reports: ${incidentAccount}` : 'The incident sequence contains attributed fault.'} ${reportReference ? `${reportReference} provides a direct verification path.` : 'No police report number was extracted.'} ${witnessCount ? `${witnessCount} witness${witnessCount === 1 ? '' : 'es'} may provide independent support.` : 'No witness was extracted, so the report and physical evidence will carry more weight.'}`
-        : 'Finch should obtain the full incident sequence, identify every responsible party, preserve photos or video, locate witnesses, and determine whether comparative fault could reduce recovery.',
+        : 'Obtain the full incident sequence, identify every responsible party, preserve photos or video, locate witnesses, and determine whether comparative fault could reduce recovery.',
       evidenceTurnIndex: findEvidenceTurn(transcript, liabilityText, /police|report|witness|fault|hit|slip|collision|crash|t-bon/i),
     },
     {
@@ -237,7 +237,7 @@ function buildReview(transcript: TranscriptCase, result: IntakeResult): IntakeRe
           ? 'At least one potential policy was identified and still requires verification.'
           : 'No available insurance policy was extracted from the transcript.',
       detailSummary: identifiedPolicies.length
-        ? `Finch identified ${identifiedPolicies.length} potential coverage source${identifiedPolicies.length === 1 ? '' : 's'}. A reported policy creates a path to recovery, but carrier acceptance, policy status, applicable limits, exclusions, and the insured activity at the time of loss still control the practical coverage analysis.`
+        ? `The analysis identified ${identifiedPolicies.length} potential coverage source${identifiedPolicies.length === 1 ? '' : 's'}. A reported policy creates a path to recovery, but carrier acceptance, policy status, applicable limits, exclusions, and the insured activity at the time of loss still control the practical coverage analysis.`
         : 'No usable policy information was extracted from the intake. Coverage cannot be evaluated until the responsible parties, carriers, policy types, and loss-date status are identified.',
       supportingFacts: coverageFacts.length ? coverageFacts : ['No carrier, policy type, policy number, status, or limit was extracted.'],
       whyItMatters: primaryPolicy
@@ -245,7 +245,7 @@ function buildReview(transcript: TranscriptCase, result: IntakeResult): IntakeRe
         : 'Even a strong liability and damages case may not be economically viable without an available defendant or applicable insurance policy. No recovery source is currently identified.',
       assessment: primaryPolicy
         ? `The ${humanize(primaryPolicy.insuranceType, 'insurance')} policy is currently marked ${primaryPolicy.coverageStatus}, not necessarily verified.${rideshareCoverage ? ' Confirm the ride phase, the driver policy, the platform policy, and any excess or uninsured motorist layer.' : ' Obtain the declarations, confirm the policy was active on the loss date, and verify applicable limits and exclusions.'}`
-        : 'Finch should identify the responsible parties, request insurance information, confirm all first-party and third-party policies, and investigate additional coverage layers before making the final intake decision.',
+        : 'Identify the responsible parties, request insurance information, confirm all first-party and third-party policies, and investigate additional coverage layers before making the final intake decision.',
       evidenceTurnIndex: findEvidenceTurn(transcript, coverageText, /insurance|policy|carrier|coverage|liability limit/i),
     },
   ];

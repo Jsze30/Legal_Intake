@@ -49,7 +49,7 @@ export function ProcessingScreen({ transcript, onComplete, onCancel }: Processin
   return (
     <main className="app-main">
       <section className="container processing-view" aria-live="polite">
-        <div className="eyebrow">Finch intake</div>
+        <div className="eyebrow">Legal intake</div>
         <h1>Analyzing transcript.</h1>
         <div className="process-list">
           {steps.map((step, index) => (

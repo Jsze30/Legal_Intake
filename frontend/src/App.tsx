@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AppHeader } from './components/AppHeader';
 import { ProcessingScreen } from './components/ProcessingScreen';
 import { ReviewScreen } from './components/ReviewScreen';
 import { SelectionScreen } from './components/SelectionScreen';
@@ -22,8 +21,6 @@ export function App() {
   useEffect(() => {
     saveState({ batch, selectedTranscript, review, decision });
   }, [batch, selectedTranscript, review, decision]);
-
-  const navigateHome = () => setScreen(batch ? 'selection' : 'upload');
 
   const handleImport = (nextBatch: ImportBatch) => {
     setBatch(nextBatch);
@@ -54,7 +51,6 @@ export function App() {
 
   return (
     <div className="site-shell">
-      <AppHeader onNavigateHome={navigateHome} />
       {screen === 'upload' && <UploadScreen onImport={handleImport} />}
       {screen === 'selection' && batch && (
         <SelectionScreen

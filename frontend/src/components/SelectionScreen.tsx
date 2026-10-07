@@ -18,7 +18,7 @@ export function SelectionScreen({ batch, selectedId, onSelect, onAnalyze, onRepl
           <div>
             <div className="eyebrow">Intake review</div>
             <h1>Choose a transcript.</h1>
-            <p className="lede">{batch.transcripts.length} transcripts found. Select the one call you want Finch to analyze.</p>
+            <p className="lede">{batch.transcripts.length} transcripts found. Select the one call you want to analyze.</p>
           </div>
         </header>
 

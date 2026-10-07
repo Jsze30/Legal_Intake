@@ -68,7 +68,7 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
             <div className="review-main">
               <article className="recommendation">
                 <div className="recommendation-top">
-                  <div className="eyebrow">Finch recommendation</div>
+                  <div className="eyebrow">Legal recommendation</div>
                 </div>
                 <h2>{review.recommendation}</h2>
                 <p className="summary">{review.summary}</p>
@@ -98,7 +98,7 @@ export function ReviewScreen({ transcript, review, decision, onDecision, onBack 
 
             <aside className="review-side">
               <section className="side-section">
-                <div className="side-title"><h3>Needs attention</h3><span className="count">{review.attentionItems.length} items</span></div>
+                <div className="side-title"><h3>Needs attention</h3><span className="count">{review.attentionItems.length} item{review.attentionItems.length === 1 ? '' : 's'}</span></div>
                 <div className="attention-list">
                   {review.attentionItems.map((item) => (
                     <div className="attention-item" key={item}><span className="attention-mark" /><b>{item}</b></div>

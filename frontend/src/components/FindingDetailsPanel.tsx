@@ -10,9 +10,9 @@ interface FindingDetailsPanelProps {
 }
 
 const categoryInsight: Record<ReviewFinding['category'], string> = {
-  Damages: 'Finch weighs treatment intensity, injury duration, medical expenses, and disruption to work or daily life. The current call provides the starting point, while medical records will determine the supported value.',
-  Liability: 'Finch looks for a clear incident sequence, fault facts, independent witnesses, and contemporaneous documentation. Consistency between the call and collected records will strengthen this assessment.',
-  Coverage: 'Finch identifies every potential policy and the facts that may trigger it. Carrier confirmation, policy status, applicable limits, and any exclusions still need to be verified directly.',
+  Damages: 'The damages analysis weighs treatment intensity, injury duration, medical expenses, and disruption to work or daily life. The current call provides the starting point, while medical records will determine the supported value.',
+  Liability: 'The liability analysis looks for a clear incident sequence, fault facts, independent witnesses, and contemporaneous documentation. Consistency between the call and collected records will strengthen this assessment.',
+  Coverage: 'The coverage analysis identifies every potential policy and the facts that may trigger it. Carrier confirmation, policy status, applicable limits, and any exclusions still need to be verified directly.',
 };
 
 export function FindingDetailsPanel({ finding, evidence, turnNumber, attentionItem, onClose, onSeeSource }: FindingDetailsPanelProps) {
@@ -20,7 +20,7 @@ export function FindingDetailsPanel({ finding, evidence, turnNumber, attentionIt
     ? 'The call contains direct support for this part of the case. It should still be confirmed against records and third-party evidence before the final decision.'
     : 'The call identifies a potential path, but the available facts are not complete enough to treat this part of the case as confirmed.';
   const detailSummary = finding.detailSummary
-    ?? `${categoryInsight[finding.category]} Finch will compare this assessment with the supporting records before the final intake decision.`;
+    ?? `${categoryInsight[finding.category]} Compare this assessment with the supporting records before the final intake decision.`;
   const supportingFacts = finding.supportingFacts?.length
     ? finding.supportingFacts
     : [`Caller statement from turn ${turnNumber}: ${evidence.text}`];
@@ -40,7 +40,7 @@ export function FindingDetailsPanel({ finding, evidence, turnNumber, attentionIt
       <p className="detail-lede">{detailSummary}</p>
 
       <section className="detail-facts">
-        <div className="detail-label">Key facts Finch used</div>
+        <div className="detail-label">Key facts used</div>
         <ul>
           {supportingFacts.map((fact) => <li key={fact}>{fact}</li>)}
         </ul>
@@ -52,7 +52,7 @@ export function FindingDetailsPanel({ finding, evidence, turnNumber, attentionIt
           <p>{whyItMatters}</p>
         </section>
         <section>
-          <div className="detail-label">Finch assessment</div>
+          <div className="detail-label">Legal assessment</div>
           <p>{assessment}</p>
         </section>
       </div>

@@ -67,6 +67,6 @@ export async function loadSampleBatch(): Promise<ImportBatch> {
   }
   const filename = import.meta.env.VITE_DEMO_MODE === 'true'
     ? 'fictional-demo-transcripts.jsonl'
-    : 'finch eng onsite - transcripts';
+    : 'sample-transcripts.jsonl';
   return parseJsonl(await response.text(), filename);
 }
