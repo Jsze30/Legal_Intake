@@ -1,4 +1,4 @@
-# Finch intake frontend
+# Legal intake frontend
 
 This React application imports and reviews legal intake transcripts.
 It sends selected transcripts to the standalone backend, waits for OpenAI extraction, and builds the review from the normalized PostgreSQL result.

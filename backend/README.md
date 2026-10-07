@@ -1,4 +1,4 @@
-# Finch Intake Backend
+# Legal Intake Backend
 
 This folder is a standalone intake API and extraction worker.
 It does not import code from the React application, and it can be used from React, curl, another service, or a phone system.

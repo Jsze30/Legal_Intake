@@ -1,6 +1,6 @@
-# Finch Intake
+# Legal Intake
 
-Finch Intake is a transcript review application for legal intake calls.
+Legal Intake is a transcript review application for legal intake calls.
 It imports one or more calls from JSONL, lets a user choose a transcript, extracts structured facts with OpenAI, saves the source and results in PostgreSQL, and presents a focused review with supporting transcript evidence.
 
 ## Demo flow
